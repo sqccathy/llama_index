@@ -1,13 +1,12 @@
 # ZenGuard AI LLamaPack
 
-<a href="https://colab.research.google.com/github/run-llama/llama_index/blob/main/llama-index-packs/llama-index-packs-zenguard/examples/zenguard.ipynb" target=_parent><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/run-llama/llama_index/blob/main/llama-index-packs/llama-index-packs-zenguard/examples/zenguard.ipynb)
 
 This LlamaPack lets you quickly set up [ZenGuard AI](https://www.zenguard.ai/) in your LlamaIndex-powered application. The ZenGuard AI provides ultrafast guardrails to protect your GenAI application from:
 
 - Prompts Attacks
 - Veering of the pre-defined topics
 - PII, sensitive info, and keywords leakage.
-- Toxicity
 - Etc.
 
 Please, also check out our [open-source Python Client](https://github.com/ZenGuard-AI/fast-llm-security-guardrails?tab=readme-ov-file) for more inspiration.
@@ -120,4 +119,3 @@ zenguard = pack.get_modules()["zenguard"]
 - [Detect Banned Topics](https://docs.zenguard.ai/detectors/banned-topics/)
 - [Detect Keywords](https://docs.zenguard.ai/detectors/keywords/)
 - [Detect Secrets](https://docs.zenguard.ai/detectors/secrets/)
-- [Detect Toxicity](https://docs.zenguard.ai/detectors/toxicity/)

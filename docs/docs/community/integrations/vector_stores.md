@@ -25,24 +25,30 @@ as the storage backend for `VectorStoreIndex`.
 - Elasticsearch (`ElasticsearchStore`) [Installation](https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html)
 - Epsilla (`EpsillaVectorStore`) [Installation/Quickstart](https://epsilla-inc.gitbook.io/epsilladb/quick-start)
 - Faiss (`FaissVectorStore`). [Installation](https://github.com/facebookresearch/faiss/blob/main/INSTALL.md).
+- Hnswlib (`HnswlibVectorStore`). [Installation](https://github.com/nmslib/hnswlib?tab=readme-ov-file#bindings-installation).
 - txtai (`TxtaiVectorStore`). [Installation](https://neuml.github.io/txtai/install/).
 - Jaguar (`JaguarVectorStore`). [Installation](http://www.jaguardb.com/docsetup.html).
 - Lantern (`LanternVectorStore`). [Quickstart](https://docs.lantern.dev/get-started/overview).
+- MariaDB (`MariaDBVectorStore`). [MariaDB Vector Overview](https://mariadb.com/kb/en/vector-overview/)
 - Milvus (`MilvusVectorStore`). [Installation](https://milvus.io/docs)
 - MongoDB Atlas (`MongoDBAtlasVectorSearch`). [Installation/Quickstart](https://www.mongodb.com/atlas/database).
 - MyScale (`MyScaleVectorStore`). [Quickstart](https://docs.myscale.com/en/quickstart/). [Installation/Python Client](https://docs.myscale.com/en/python-client/).
 - Neo4j (`Neo4jVectorIndex`). [Installation](https://neo4j.com/docs/operations-manual/current/installation/).
+- OceanBase (`OceanBaseVectorStore`). [OceanBase Overview](https://github.com/oceanbase/oceanbase). [Quickstart](../../examples/vector_stores/OceanBaseVectorStore.ipynb). [Python Client](https://github.com/oceanbase/pyobvector)
+- Opensearch (`OpensearchVectorStore`) [Opensearch as vector database](https://opensearch.org/platform/search/vector-database.html). [QuickStart](https://opensearch.org/docs/latest/search-plugins/knn/index/)
 - Pinecone (`PineconeVectorStore`). [Installation/Quickstart](https://docs.pinecone.io/docs/quickstart).
 - Qdrant (`QdrantVectorStore`) [Installation](https://qdrant.tech/documentation/install/) [Python Client](https://qdrant.tech/documentation/install/#python-client)
 - LanceDB (`LanceDBVectorStore`) [Installation/Quickstart](https://lancedb.github.io/lancedb/basic/)
 - Redis (`RedisVectorStore`). [Installation](https://redis.io/docs/latest/operate/oss_and_stack/install/install-stack/).
 - Relyt (`RelytVectorStore`). [Quickstart](https://docs.relyt.cn/docs/vector-engine/).
 - Supabase (`SupabaseVectorStore`). [Quickstart](https://supabase.github.io/vecs/api/).
+- Tablestore (`Tablestore`). [Tablestore Overview](https://www.aliyun.com/product/ots). [Quickstart](../../examples/vector_stores/TablestoreDemo.ipynb). [Python Client](https://github.com/aliyun/aliyun-tablestore-python-sdk).
 - TiDB (`TiDBVectorStore`). [Quickstart](../../examples/vector_stores/TiDBVector.ipynb). [Installation](https://tidb.cloud/ai). [Python Client](https://github.com/pingcap/tidb-vector-python).
 - TimeScale (`TimescaleVectorStore`). [Installation](https://github.com/timescale/python-vector).
 - Upstash (`UpstashVectorStore`). [Quickstart](https://upstash.com/docs/vector/overall/getstarted)
 - Vertex AI Vector Search (`VertexAIVectorStore`). [Quickstart](https://cloud.google.com/vertex-ai/docs/vector-search/quickstart)
 - Weaviate (`WeaviateVectorStore`). [Installation](https://weaviate.io/developers/weaviate/installation). [Python Client](https://weaviate.io/developers/weaviate/client-libraries/python).
+- WordLift (`WordliftVectorStore`). [Quickstart](https://docs.wordlift.io/llm-connectors/wordlift-vector-store/). [Python Client](https://pypi.org/project/wordlift-client/).
 - Zep (`ZepVectorStore`). [Installation](https://docs.getzep.com/deployment/quickstart/). [Python Client](https://docs.getzep.com/sdk/).
 - Zilliz (`MilvusVectorStore`). [Quickstart](https://zilliz.com/doc/quick_start)
 
@@ -483,6 +489,22 @@ vector_store.logout()
 **Note**: Client(requires jaguardb-http-client) <--> Http Gateway <--> JaguarDB Server
 Client side needs to run: "pip install -U jaguardb-http-client"
 
+**MariaDB**
+
+```python
+from llama_index.vector_stores.mariadb import MariaDBVectorStore
+
+vector_store = MariaDBVectorStore.from_params(
+    host="localhost",
+    port=3306,
+    user="llamaindex",
+    password="password",
+    database="vectordb",
+    table_name="llama_index_vectorstore",
+    embed_dim=1536,  # OpenAI embedding dimension
+)
+```
+
 **Milvus**
 
 - Milvus Index offers the ability to store both Documents and their embeddings.
@@ -641,6 +663,46 @@ vector_store = SingleStoreVectorStore(
     metadata_field="metadata",
     vector_field="vector",
     timeout=30,
+)
+```
+
+**Tablestore**
+
+```python
+import tablestore
+from llama_index.vector_stores.tablestore import TablestoreVectorStore
+
+# create a vector store that does not support filtering non-vector fields
+simple_vector_store = TablestoreVectorStore(
+    endpoint="<end_point>",
+    instance_name="<instance_name>",
+    access_key_id="<access_key_id>",
+    access_key_secret="<access_key_secret>",
+    vector_dimension=512,
+)
+
+# create a vector store that support filtering non-vector fields
+vector_store_with_meta_data = TablestoreVectorStore(
+    endpoint="<end_point>",
+    instance_name="<instance_name>",
+    access_key_id="<access_key_id>",
+    access_key_secret="<access_key_secret>",
+    vector_dimension=512,
+    # optional: custom metadata mapping is used to filter non-vector fields.
+    metadata_mappings=[
+        tablestore.FieldSchema(
+            "type",  # non-vector fields
+            tablestore.FieldType.KEYWORD,
+            index=True,
+            enable_sort_and_agg=True,
+        ),
+        tablestore.FieldSchema(
+            "time",  # non-vector fields
+            tablestore.FieldType.LONG,
+            index=True,
+            enable_sort_and_agg=True,
+        ),
+    ],
 )
 ```
 
@@ -873,6 +935,7 @@ documents = reader.load_data(
 - [Azure Cosmos DB](../../examples/vector_stores/AzureCosmosDBMongoDBvCoreDemo.ipynb)
 - [Caasandra](../../examples/vector_stores/CassandraIndexDemo.ipynb)
 - [Chromadb](../../examples/vector_stores/ChromaIndexDemo.ipynb)
+- [Couchbase](../../examples/vector_stores/CouchbaseVectorStoreDemo.ipynb)
 - [Dash](../../examples/vector_stores/DashvectorIndexDemo.ipynb)
 - [Deeplake](../../examples/vector_stores/DeepLakeIndexDemo.ipynb)
 - [DocArray HNSW](../../examples/vector_stores/DocArrayHnswIndexDemo.ipynb)
@@ -899,10 +962,12 @@ documents = reader.load_data(
 - [Rockset](../../examples/vector_stores/RocksetIndexDemo.ipynb)
 - [Simple](../../examples/vector_stores/SimpleIndexDemo.ipynb)
 - [Supabase](../../examples/vector_stores/SupabaseVectorIndexDemo.ipynb)
+- [Tablestore](../../examples/vector_stores/TablestoreDemo.ipynb)
 - [Tair](../../examples/vector_stores/TairIndexDemo.ipynb)
 - [Tencent](../../examples/vector_stores/TencentVectorDBIndexDemo.ipynb)
 - [Timesacle](../../examples/vector_stores/Timescalevector.ipynb)
 - [Upstash](../../examples/vector_stores/UpstashVectorDemo.ipynb)
 - [Weaviate](../../examples/vector_stores/WeaviateIndexDemo.ipynb)
 - [Weaviate Hybrid Search](../../examples/vector_stores/WeaviateIndexDemo-Hybrid.ipynb)
+- [WordLift](../../examples/vector_stores/WordLiftDemo.ipynb)
 - [Zep](../../examples/vector_stores/ZepIndexDemo.ipynb)

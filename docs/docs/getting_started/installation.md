@@ -17,7 +17,6 @@ pip install llama-index
 This is a starter bundle of packages, containing
 
 - `llama-index-core`
-- `llama-index-legacy  # temporarily included`
 - `llama-index-llms-openai`
 - `llama-index-embeddings-openai`
 - `llama-index-program-openai`
@@ -31,7 +30,7 @@ This is a starter bundle of packages, containing
 ### Important: OpenAI Environment Setup
 
 By default, we use the OpenAI `gpt-3.5-turbo` model for text generation and `text-embedding-ada-002` for retrieval and embeddings. In order to use this, you must have an OPENAI_API_KEY set up as an environment variable.
-You can obtain an API key by logging into your OpenAI account and [and creating a new API key](https://platform.openai.com/account/api-keys).
+You can obtain an API key by logging into your OpenAI account and [creating a new API key](https://platform.openai.com/account/api-keys).
 
 !!! tip
     You can also [use one of many other available LLMs](../module_guides/models/llms/usage_custom.md). You may need additional environment keys + tokens setup depending on the LLM provider.
@@ -56,7 +55,7 @@ A full guide to using and configuring embedding models is available [here](../mo
 
 ## Installation from Source
 
-Git clone this repository: `git clone https://github.com/jerryjliu/llama_index.git`. Then do the following:
+Git clone this repository: `git clone https://github.com/run-llama/llama_index.git`. Then do the following:
 
 - [Install poetry](https://python-poetry.org/docs/#installation) - this will help you manage package dependencies
 - `poetry shell` - this command creates a virtual environment, which keeps installed packages contained to this project
